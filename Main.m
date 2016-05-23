@@ -3,17 +3,34 @@
 %% Project 14
 
 
-
 %% Clean Slate
 clc, clear variables, close all
 
+
+
 %% ------ Loading Sample Data ------
 % Main Markext Index
-mainMktIndex = 11-1; % Hong Kong (need to offset one column, to ignore date)
-startNormalPeriod=19960101;
-endNormalPeriod=19971016;
-endTurmoilPeriod=19971117;
+CRISIS = 'SUBPRIME';
 
+switch CRISIS
+    case 'ASIA'
+        mainMktIndex = 10;  %HK in zero index base 
+        startNormalPeriod=19960101;
+        endNormalPeriod=19971016;
+        endTurmoilPeriod=19971117;
+        suffix='HK_CRISIS';
+        
+    case 'SUBPRIME'
+        mainMktIndex = 29;  %HK in zero index base 
+        startNormalPeriod=20070101;
+        endNormalPeriod=20080912;
+        endTurmoilPeriod=20090311;
+        suffix='SUBPRIME_CRISIS';
+    
+    otherwise
+        warning('Crisis not implemeted');
+        exit;
+end
 
 % Load the Index Returns
 [data, headers] = xlsread('data\MSCI-PRICES-LOCAL.xlsx',1);
@@ -41,7 +58,7 @@ data_IR = data_IR(startIndex:endTurmoilIndex, :);
 %% Loop for each market and calculate standard deviation & correlation coefs. 
 
 % Process Stable Period
-input = dataOUT(:,:,startIndex:endIndex-2);
+input = dataOUT(:,:,1:endIndex-startIndex-1);
 
 for i=1:cols(data)-1
 
@@ -60,7 +77,7 @@ for i=1:cols(data)-1
 end
 
 % Process Turmoil Period
-input = dataOUT(:,:,endIndex-1:endTurmoilIndex-2);
+input = dataOUT(:,:,endIndex-startIndex:endTurmoilIndex-startIndex-1);
 for i=1:cols(data)-1
 
     % Process the data and output results
@@ -76,7 +93,7 @@ for i=1:cols(data)-1
 end
 
 % Process Full Period
-input = dataOUT(:,:,startIndex:endTurmoilIndex-2);
+input = dataOUT(:,:,1:endTurmoilIndex-startIndex-1);
 for i=1:cols(data)-1
 
     % Process the data and output results
@@ -121,5 +138,5 @@ end
 UncondResults = FisherTransform(ResultsAdj, cols(data)-1);
 
 %% Save the resuts to a file 
-SaveResults(CondResults, 'c:\temp\results_contagion.xls')
-SaveResults(UncondResults, 'c:\temp\results_contagion_uncond.xls')
+SaveResults(CondResults, strcat('c:\temp\results_contagion_' , suffix , '.xls'));
+SaveResults(UncondResults, strcat('c:\temp\results_contagion_uncond_' , suffix , '.xls'));

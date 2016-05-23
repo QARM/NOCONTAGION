@@ -18,7 +18,7 @@ function [ data_output, exo_output, date_output ] = ...
 %	8. FRANCE       17. MEXICO      26. TAIWAN		
 
 
-% Create a structure to contains for each country a (T*4) matrix 
+% Create an indexed structure to contains for each country a (T*4) matrix 
 % 1st Column: Y1 (Log Returns Main)
 % 2nd Column: Y2 (Log Retruns Another Market)
 % 3rd Column: IR Main
@@ -65,7 +65,7 @@ end
 
 % Build VAR_INPUT
 for j=1:n_markets
-    if (j ~= main_idx) 
+    %if (j ~= main_idx) 
     VAR_INPUT(j, 1, :) = MavgMainReturns(:, main_idx);
     VAR_INPUT(j, 2, :) = MavgMainReturns(:,j);
     VAR_INPUT(j, 3, :) = MainIRReturns(1:rows(MainIRReturns)-1, main_idx);
@@ -79,7 +79,7 @@ for j=1:n_markets
     end    
     EXO_INPUT{j} = exoCells;
 
-    end
+    %end
 end
 
 
