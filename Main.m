@@ -22,9 +22,9 @@ switch CRISIS
         
     case 'SUBPRIME'
         mainMktIndex = 29;  %HK in zero index base 
-        startNormalPeriod=20070101;
-        endNormalPeriod=20080912;
-        endTurmoilPeriod=20090311;
+        startNormalPeriod=20060102; %20070101
+        endNormalPeriod=20070801;   %20080912
+        endTurmoilPeriod=20090311;  %20090311
         suffix='SUBPRIME_CRISIS';
     
     otherwise
@@ -53,12 +53,14 @@ data_IR = data_IR(startIndex:endTurmoilIndex, :);
 %	3. Nominal Short rate of Main market
 %	4. Nominal Short rate of Other market
 
-[dataOUT,exoOUT, dates] = ProcessData(data, data_IR, mainMktIndex, 1);
+[dataOUT,exoOUT, dates, pca_input] = ProcessData(data, data_IR, mainMktIndex, 1);
 
 %% Loop for each market and calculate standard deviation & correlation coefs. 
 
 % Process Stable Period
 input = dataOUT(:,:,1:endIndex-startIndex-1);
+
+
 
 for i=1:cols(data)-1
 
@@ -140,3 +142,6 @@ UncondResults = FisherTransform(ResultsAdj, cols(data)-1);
 %% Save the resuts to a file 
 SaveResults(CondResults, strcat('c:\temp\results_contagion_' , suffix , '.xls'));
 SaveResults(UncondResults, strcat('c:\temp\results_contagion_uncond_' , suffix , '.xls'));
+
+% PCA Analysis
+pca_rsults = PCA_Analysis(pca_input, headers(1,:), 0);

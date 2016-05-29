@@ -1,4 +1,4 @@
-function [ data_output, exo_output, date_output ] = ...
+function [ data_output, exo_output, date_output, pca_input ] = ...
     ProcessData( data_input, data_input_rates, main_idx, use_log )
 % Process data and return a vector of Dates (Tx1) and a structure of 
 % Vectors Y (Tx2) (Log Returns Main, Log Returns Other) 
@@ -87,5 +87,6 @@ end
 data_output = VAR_INPUT;
 date_output = TSdates(2:rows(MavgMainReturns)+1,:);
 exo_output = EXO_INPUT;
+pca_input = MavgMainReturns;
 end
 

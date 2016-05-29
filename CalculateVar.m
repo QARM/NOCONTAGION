@@ -22,6 +22,8 @@ function [ market, stdDev, correl, n_obs ] = CalculateVar(dataInput,...
 %
 %     displayStats: is a boolean to indicate if we want to output stats.
 
+% Scaling factor for IR return (VAR stability)
+scale_IR=10;
 
 % Ignore incomplete data in the series
 offset = 1;
@@ -72,7 +74,7 @@ end
 
 
 % Build a Vector Y
-Y = [mainReturns,otherReturns,mainIR,otherIR];
+Y = [mainReturns,otherReturns,mainIR*scale_IR,otherIR*scale_IR];
 %X = [mainIR,otherIR]; %%,mainIR,otherIR];
 
 
